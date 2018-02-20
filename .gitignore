@@ -1,8 +1,7 @@
-# Compiled class file
-workspace.xml
+cui.xml
 
 # Compiled class file
-#*.class
+*.class
 
 # Log file
 *.log
