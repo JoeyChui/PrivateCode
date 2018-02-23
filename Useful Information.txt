@@ -1,1 +1,10 @@
 1:  The result of eval('27+13') is 40.
+
+import os
+files = os.listdir("C:\\Users\\Joey\\Desktop\\zhengwuwb\\AccountAllData")
+for file in files:
+    print(file)
+
+filePath = "C:\\Users\\Joey\\Downloads\\9c594bf878e205ff1c271529b5c19d103168.eot"
+for line in open(filePath, 'r', encoding="utf-8"):
+    print(line)
