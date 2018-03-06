@@ -1,35 +1,94 @@
-import java.util.Scanner;
 
-public class NumberGame{
-    public static void main(String[] args){
-        int randomNumber = (int)(Math.randm() * 100) + 1;
-        boolean hasWon = false;
+public class LinkedList {
 
-        System.out.println("I have randomly chose a numberGame between 1 and 100.");
-        System.out.println("Try to guess it.");
+    private class Data{
+        private Object obj;
+        private Data next = null;
 
-        Scanner scanner = new Scanner(System.in);
-        for(int i = 10; i > 0; i--){
-            System.out.println("You have " + i + " guess(es) left. Choose again: ");
-            int guess = scanner.nextInt();
+        Data(Object obj){
+            this.obj = obj;
+        }
+    }
 
-            if(randomNumber < guess){
-                System.out.println("It's small than " + guess + ".");
-            }else if(randomNumber > guess){
-                System.out.println("It's greater than " + guess + ".");
-            }else{
-                hasWon = true;
-                break;
+    private Data first = null;
+
+    public void insertFirst(Object obj){
+        Data data = new Data(obj);
+        data.next = first;
+        first = data;
+    }
+
+    public Object deleteFirst() throws Exception{
+        if(first == null)
+            throw new Exception("empty!");
+        Data temp = first;
+        first = first.next;
+        return temp.obj;
+    }
+
+    public Object find(Object obj) throws Exception{
+        if(first == null)
+            throw new Exception("LinkedList is empty!");
+
+        Data cur = first;
+        while(cur != null){
+            if(cur.obj.equals(obj)){
+                return cur.obj;
+            }
+            cur = cur.next;
+        }
+        return null;
+    }
+
+    public void remove(Object obj) throws Exception{
+        if(first == null)
+            throw new Exception("LinkedList is empty!");
+        if(first.obj.equals(obj)){
+            first = first.next;
+        }else{
+            Data pre = first;
+            Data cur = first.next;
+            while(cur != null){
+                if(cur.obj.equals(obj)){
+                    pre.next = cur.next;
+                }
+                pre = cur;
+                cur = cur.next;
             }
         }
+    }
 
-        if(hasWon){
-            System.out.println("CORRECT... YOU WIN!!!");
-        }else{
-            System.out.println("GAME OVER... YOU LOSE!!!");
-            System.out.println("The number was: " + randomNmber);
+    public boolean isEmpty(){
+        return (first == null);
+    }
+
+    public void display(){
+        if(first == null)
+            System.out.println("empty");
+
+        Data cur = first;
+
+        while(cur != null){
+            System.out.print(cur.obj.toString() + " -> ");
+            cur = cur.next;
         }
 
+        System.out.print("\n");
+    }
+
+    public static void main(String[] args) throws Exception {
+        LinkedList ll = new LinkedList();
+        ll.insertFirst(4);
+        ll.insertFirst(3);
+        ll.insertFirst("sdfgh");
+        ll.insertFirst(1);
+        ll.display();
+        ll.deleteFirst();
+        ll.display();
+        ll.remove(3);
+        ll.display();
+        System.out.println(ll.find(1));
+        System.out.println(ll.find(4));
     }
 
 }
