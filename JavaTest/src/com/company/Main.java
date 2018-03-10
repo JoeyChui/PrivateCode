@@ -1,10 +1,13 @@
 package com.company;
 
-public class Main{
+import java.util.Scanner;
 
-    public static void main(String[] args){
-	// write your code here
-        System.out.println("erfg");
+public class Main {
+    public static void main(String[] args) {
+        char[] i = {'d', 'r', 't', 'y', 'u'};
+        System.out.println(i);
+         int j;
+        System.out.println(j);
 
     }
 }
