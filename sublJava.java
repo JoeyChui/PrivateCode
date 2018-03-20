@@ -1,94 +1,37 @@
 
-public class LinkedList {
 
-    private class Data{
-        private Object obj;
-        private Data next = null;
+// Definition for binary tree
+public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
 
-        Data(Object obj){
-            this.obj = obj;
-        }
+    TreeNode(int x) {
+        val = x;
+    }
+}
+
+public class Solution {
+    public TreeNode reConstructBinaryTree(int [] pre, int [] in) {
+        TreeNode root = reConstructBinaryTree(pre, 0, pre.length - 1, in, 0, in.length - 1);
+        return root;
     }
 
-    private Data first = null;
+    // 前序遍历{1,2,4,7,3,5,6,8} 和 中序遍历序列{4,7,2,1,5,3,8,6}
+    private TreeNode reConstructBinaryTree(int [] pre, int startPre, int endPre, int [] in, int startIn, int endIn) {
 
-    public void insertFirst(Object obj){
-        Data data = new Data(obj);
-        data.next = first;
-        first = data;
-    }
+        if (startPre > endPre || startIn > endIn)
+            return null;
 
-    public Object deleteFirst() throws Exception{
-        if(first == null)
-            throw new Exception("empty!");
-        Data temp = first;
-        first = first.next;
-        return temp.obj;
-    }
+        TreeNode root = new TreeNode(pre[startPre]);
 
-    public Object find(Object obj) throws Exception{
-        if(first == null)
-            throw new Exception("LinkedList is empty!");
-
-        Data cur = first;
-        while(cur != null){
-            if(cur.obj.equals(obj)){
-                return cur.obj;
-            }
-            cur = cur.next;
-        }
-        return null;
-    }
-
-    public void remove(Object obj) throws Exception{
-        if(first == null)
-            throw new Exception("LinkedList is empty!");
-        if(first.obj.equals(obj)){
-            first = first.next;
-        }else{
-            Data pre = first;
-            Data cur = first.next;
-            while(cur != null){
-                if(cur.obj.equals(obj)){
-                    pre.next = cur.next;
-                }
-                pre = cur;
-                cur = cur.next;
+        for(int i = startIn; i <= endIn; i++) {
+            if (in[i] == pre[startPre]) {
+                root.left = reConstructBinaryTree(pre, startPre + 1, startPre + i - startIn, in, startIn, i - 1);
+                root.right = reConstructBinaryTree(pre, i - startIn + startPre + 1, endPre, in, i + 1, endIn);
+                break;
             }
         }
+        return root;
     }
-
-    public boolean isEmpty(){
-        return (first == null);
-    }
-
-    public void display(){
-        if(first == null)
-            System.out.println("empty");
-
-        Data cur = first;
-
-        while(cur != null){
-            System.out.print(cur.obj.toString() + " -> ");
-            cur = cur.next;
-        }
-
-        System.out.print("\n");
-    }
-
-    public static void main(String[] args) throws Exception {
-        LinkedList ll = new LinkedList();
-        ll.insertFirst(4);
-        ll.insertFirst(3);
-        ll.insertFirst("sdfgh");
-        ll.insertFirst(1);
-        ll.display();
-        ll.deleteFirst();
-        ll.display();
-        ll.remove(3);
-        ll.display();
-        System.out.println(ll.find(1));
-        System.out.println(ll.find(4));
-    }
-
 }
