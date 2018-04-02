@@ -35,3 +35,19 @@ public class Solution {
         return root;
     }
 }
+
+
+public List<Object> values() {
+        List<Object> values = new ArrayList<>();
+
+        if (null != leftHero)
+            values.addAll(leftHero.values());
+
+        values.add(value);
+
+        if (null != rightHero)
+
+            values.addAll(rightHero.values());
+
+        return values;
+    }
