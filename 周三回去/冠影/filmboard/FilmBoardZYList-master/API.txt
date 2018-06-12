@@ -1,0 +1,12 @@
+http://v.youku.com/action/getVideoPlayInfo?beta&vid=751213069&showid=318643&param%5B%5D=updown&callback=tuijsonp5
+
+
+
+http://pcweb.api.mgtv.com/variety/showlist?video_id=4086610&callback=jQuery18208138382390869625_1504874848428&_=1504874848572
+
+
+
+http://vc.mgtv.com/v2/dynamicinfo?callback=jQuery18208138382390869625_1504874848430&vid=4086610&_=1504874848613
+http://vc.mgtv.com/v2/dynamicinfo?&vid=4086610
+
+26024463+JoeyChui@users.noreply.github.com

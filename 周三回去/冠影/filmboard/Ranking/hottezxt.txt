@@ -1,0 +1,27 @@
+getCandidate
+	def getOnePage(url, encoding='utf-8'):
+	def getCandidates(URLS):
+
+	candidates = getCandidates(URLS)
+
+nameToWeiboID
+	def getOnePage(url, header, cookie):
+
+	for candidate in candidates:
+    url = 'http://s.weibo.com/weibo/' + candidate
+    print(url)
+    html = getOnePage(url, header, cookie)
+    item = re.findall(r'action-data=\\\"uid=(\d+)', html)[0]
+    candidateWeibo[candidate] = 'http://weibo.com/u/' + item
+    print('http://weibo.com/u/' + item)
+
+getCadidateData
+	def getOnePage(url):
+	def strToSum(strList):
+	def getCandidateData(url):
+
+	urls = ['http://weibo.com/u/3591355593?is_all=1&page=1']#, 'http://weibo.com/u/3591355593', 'http://weibo.com/u/1825457341', 'http://weibo.com/u/1804549454', 'http://weibo.com/u/1669879400']
+	for url in urls:
+		basicData, forwardSum, repeatSum, praisedSum = getCandidateData(url)
+		hotData = int((forwardSum + repeatSum * 10 + praisedSum) / 3)
+		print(basicData, forwardSum, repeatSum, praisedSum, hotData)
