@@ -1,11 +1,10 @@
-import requests
-import json
-import xlrd, xlwt, csv
+import requests, re
+import xlrd, xlwt
 
 def rdXLSTableByRow(file, sheetNum = 0, firstRowFlag = True, printFlag = True, info = '', returnDictListFlag = False):
     file = str(file)
-    if file[-4:] != ".xlsx":
-        file += ".xlsx"
+    if file[-4:] != ".xls":
+        file += ".xls"
     xlsFile = xlrd.open_workbook(file)
     sheet = xlsFile.sheets()[sheetNum]
     biglist = []
@@ -47,22 +46,6 @@ def wtToXLS(biglist, file, sheetName = 'Sheet1', printFlag = True, info = ''):
         print("write successfully:" + file + info)
     return
 
-
-def wtToCSV(biglist, file, printFlag = True, info = ''):
-    with open(file, 'w', newline = '') as csvFile:
-        csvFile.write(codecs.BOM_UTF8)
-        writer = csv.writer(csvFile, dialect = 'excel')
-        for row in biglist:
-            writer.writerow(row)
-        file = str(file)
-        if file[-4:] != ".csv":
-            file += ".csv"
-        if printFlag:
-            if info != '':
-                info = ' ' + info
-            print("write successfully:" + file + info)
-        return
-
 def getOnePage(url, encoding = 'UTF-8', headers = {}, cookies = {}, json = False):
     try:
         response = requests.get(url, headers = headers, cookies = cookies)
@@ -77,31 +60,37 @@ def getOnePage(url, encoding = 'UTF-8', headers = {}, cookies = {}, json = False
         print("ER:getOnePage", url)
         return None
 
-def getDpShopId(url):
-    result = getOnePage(url)
-    if result is None:
-        return "getDpShopId None"
-    print("*******" + result)
-    result = json.loads(result)
-    if len(result) == 0:
-        return ""
-    return result['dpShopId']
+def reHTML(patternStr, html, first = False, function = None, functionArguments = ()):
+    pattern = re.compile(patternStr, re.S)
+    items = re.findall(pattern, html)
+    if items == []:
+        return '' if first else []
+    for ii in range(len(items)):
+        if type(items[ii]) == tuple:
+            itemStrip = []
+            for ele in items[ii]:
+                itemStrip.append(str(ele).strip())
+            items[ii] = itemStrip
+        else:
+            items[ii] = str(items[ii]).strip()
+    if first:
+        return items[0]
+    if function != None:
+        return function(items, functionArguments)
+    return items
 
-url = "http://10.76.190.163:8080/match/matchOneShop?shopName={}&branch={}&city={}"
-shopName = ""
-branch = ""
-city = ""
+# ['里食真', '联合路店', '27206953', 'http://www.dianping.com/shop/27206953']
+bigTable = rdXLSTableByRow("匹配结果 copy", firstRowFlag = False)
+bigList = [["原店名", "原分店名", "点评店名", "dpShopId", "点评链接"]]
+for item in bigTable:
+    url = item[3]
+    if len(url) > 29:
+        html = getOnePage(url)
+        dpShopName = reHTML("class=\"shop-name\">(.*?)<a", html, first = True)
+    else:
+        dpShopName = ""
+    bigList.append([item[0], item[1], dpShopName, item[2], item[3]])
+    wtToXLS(bigList, "最终匹配结果")
+    print([item[0], item[1], dpShopName, item[2], item[3]])
 
-resultList = [["原店名", "原分店名", "dpShopId", "点评链接"]]
-bigtable = rdXLSTableByRow("/Users/joeychui/GitHub/PrivateCode/temp")[3:]
-for item in bigtable:
-    shopName, branch = item[1], item[2]
-    try:
-        dpShopId = getDpShopId(url.format(shopName, branch, city))
-    except:
-        dpShopId = ""
-    
-    resultList.append([shopName, branch, dpShopId, "http://www.dianping.com/shop/" + dpShopId])
-    print([shopName, branch, dpShopId])
-    wtToXLS(resultList, "匹配结果")
-    # wtToCSV(resultList, "匹配结果")
+
